@@ -14,13 +14,11 @@ public class GroundSpawnController : MonoBehaviour
     public Transform NextPlatformPosition;
 
     public float spawnDistance = 8;
-
-    // Update is called once per frame
     void Start()
     {
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //    clonePosition = groundSpawner.transform.position;
         playerPosition = PlayerController.Instance.transform.position;
