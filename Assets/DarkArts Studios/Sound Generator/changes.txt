@@ -1,0 +1,62 @@
+Sound Generator Update History
+==============================
+
+v2.3.1
+------
+
+* Fixes for 2017 versions of Unity, specifically UnityScript is now deprecated,
+  all examples for 2017 versions of this asset have been updated/refactored to
+  use C# instead.
+
+v2.2
+----
+
+* Custom builds for a range of Unity versions now that Unity supports
+  individual uploads per Unity version
+* Corrected some meta file issues for Unity 4.x series now that we can ship
+  per-unity-version packages
+* Ensure that zoom and move (mouse events) are contained within the zoom area
+* Ensure that icon size is only retrieved (from preferences) post construction
+* Correct icon-set as (FontAwesome -> Fugue) as well as GUIContent ordering for
+  title and icon in windows' titlebars
+* Upgrade Reordable list & Remove ReorderableFlag DisableClipping flag as it's
+  become redundant
+* EditorGUIUtility.LookLikeControls deprecated after Unity 4.2
+* Use GUI Content for settings editor window title & icon from Unity 5.1 onwards
+* Only Unity 4 series requires _3D argument for clip creation, deprecated in
+  Unity 5 and above
+
+v2.1
+----
+
+* Upgraded DarkArts Studios Core libraries syncing up with more stable &
+  improved core shared by other DarkArts Studios Editor Extensions
+* Sound Generator Composition Inspector now has a button to open Composition
+  Editor
+* Removed some legacy debug logging that should never have been released
+* Fixed audio clip discarding console warning when using "Smooth Loop" within
+  an Output Module
+* Began upgrading entire UI with improved icons more accurately depicting
+  functionality
+
+v2.0.1
+-------
+
+This change was motivated by feedback after the Asset Store February Madness
+sale at the beginning of February 2014.
+
+* Harmonics Module added
+* Output Module now has a "Loop"ù playback button playing back the composition
+  as a loop
+* Output Module has a "Smooth Loop" option, smoothing out looping sounds if
+  checked.
+* Fixed an issue with very high resolution Mac platforms where modules became
+  uneditable (Related to a Unity Bug in which control-ids of Slider controls
+  have issues). Disabled all Slider controls within modules until Unity
+  resolves this.
+
+
+v2.0.0
+------
+
+First public release of Sound Generator as a complete rewrite in modular form
