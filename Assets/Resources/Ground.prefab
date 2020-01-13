@@ -189,7 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundSpawner: {fileID: 4277183718218945199}
-  ground: {fileID: 3616829990021290521}
   NextPlatformPosition: {fileID: 331219146436125254}
   spawnDistance: 200
 --- !u!114 &6809482510014551452
@@ -215,7 +214,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4985156879242708573}
   m_Layer: 0
-  m_Name: GroundSpawner
+  m_Name: GroundSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
