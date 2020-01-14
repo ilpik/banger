@@ -23,18 +23,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Jump(isOnGround);
+        Jump();
     }
 
-    void Jump(bool isOnGround)
+    void Jump()
     {
+        //if (isOnGround)
+        //{
+        //    rb.AddForce(Vector3.up * jumpHeight);
+        //    Debug.Log("space works");
+        //    isOnGround = false;
+        //    Debug.Log("isOnGround = " + isOnGround);
+        //}
         if (isOnGround)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 rb.AddForce(Vector3.up * jumpHeight);
+                isOnGround = false;
             }
         }
     }
-   
+
 }
