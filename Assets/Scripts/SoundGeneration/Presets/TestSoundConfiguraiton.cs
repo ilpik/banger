@@ -1,18 +1,23 @@
-﻿using Assets.Scripts.SoundGeneration;
-using Assets.Scripts.SoundGeneration.Adsr;
+﻿using Assets.Scripts.SoundGeneration.Adsr;
+using Assets.Scripts.SoundGeneration.Oscillators;
+using Assets.Scripts.SoundGeneration.Util;
 using DarkArtsStudios.SoundGenerator;
-using DarkArtsStudios.SoundGenerator.Module.Oscillator;
-using UnityEngine;
 
-class TestSoundConfiguraiton : BaseSoundConfiguration
+namespace Assets.Scripts.SoundGeneration.Presets
 {
-    public override void Configure(Composition composition)
+    class TestSoundConfiguraiton : BaseSoundConfiguration
     {
-        base.Configure(composition);
-        var osc = AddModule<Sin>(composition);
-        var adsr = AddModule<AdsrEnvelope>(composition);
+        protected override void OnConfigure(Composition composition)
+        {
+            base.OnConfigure(composition);
+            var osc = AddModule<Sin>(composition);
+            var adsr = AddModule<AdsrEnvelope>(composition);
+            var nu = AddModule<AdsrEnvelope>(composition);
+            var nu2 = AddModule<AdsrEnvelope>(composition);
+            var nu3 = AddModule<AdsrEnvelope>(composition);
 
-        adsr.GetInputFrom(osc);
-        output.GetInputFrom(adsr);
+            adsr.GetInputFrom(osc);
+            output.GetInputFrom(adsr);
+        }
     }
 }

@@ -1,25 +1,27 @@
 ﻿using System;
 
-public class SinWaveOscillator
+namespace Assets.Scripts.SoundGeneration.Oscillators
 {
-    double currentSignalTime;           // the current dsp time
-    double currentSignalFrequency;      // the current frequency of the signal
-    double currentSignalPhaseOffset;    // the current phase offset of the signal
-
-    double currentSignaOutlValue;       //the current signal output value		
-
-    public SinWaveOscillator()
+    public class SinWaveOscillator
     {
-        currentSignalFrequency = 400.0;
-        currentSignalPhaseOffset = 0.0;
-    }
+        double currentSignalTime;           // the current dsp time
+        double currentSignalFrequency;      // the current frequency of the signal
+        double currentSignalPhaseOffset;    // the current phase offset of the signal
 
-    public double calculateSignalValue(double newSignalTime, double newSignalFrequency)
-    {
+        double currentSignaOutlValue;       //the current signal output value		
 
-        if (Math.Abs(currentSignalFrequency - newSignalFrequency) > 0.00000001)
+        public SinWaveOscillator()
         {
-            /*This part takes care of what should happen when the signal's frequency changes
+            currentSignalFrequency = 400.0;
+            currentSignalPhaseOffset = 0.0;
+        }
+
+        public double calculateSignalValue(double newSignalTime, double newSignalFrequency)
+        {
+
+            if (Math.Abs(currentSignalFrequency - newSignalFrequency) > 0.00000001)
+            {
+                /*This part takes care of what should happen when the signal's frequency changes
 			(when the incoming frequency is different from the current frequency)
 			 This is VERY IMPORTANT, because if you do not handle this matter then you will hear
 			 LOTS of CLICKS when the frequency changes.
@@ -36,34 +38,35 @@ public class SinWaveOscillator
 			heard (because of that, at least). 
 			This is kind of complicated, and very low-level audio stuff, so if you do not understand it, you may just use it. */
 
-            // calculate the signal's current period: period = 1 / frequency
-            double currentSignalPeriod = 1.0 / currentSignalFrequency;
-            // calculate the current number of cycles:
-            // the number of cycles is the number of times that a complete period of the wave has occured.
-            double currentNumberOfSignalCycles = (currentSignalTime / currentSignalPeriod) + (currentSignalPhaseOffset / (2.0 * Math.PI));
-            double currentSignalCyclePosition = currentNumberOfSignalCycles % 1.0;  //current cycle position
+                // calculate the signal's current period: period = 1 / frequency
+                double currentSignalPeriod = 1.0 / currentSignalFrequency;
+                // calculate the current number of cycles:
+                // the number of cycles is the number of times that a complete period of the wave has occured.
+                double currentNumberOfSignalCycles = (currentSignalTime / currentSignalPeriod) + (currentSignalPhaseOffset / (2.0 * Math.PI));
+                double currentSignalCyclePosition = currentNumberOfSignalCycles % 1.0;  //current cycle position
 
-            double newSignalPeriod = 1.0 / newSignalFrequency;
-            double newNumberOfSignalCycles = currentSignalTime / newSignalPeriod;
-            double newSignalCyclePosition = newNumberOfSignalCycles % 1.0;          //new cycle position
+                double newSignalPeriod = 1.0 / newSignalFrequency;
+                double newNumberOfSignalCycles = currentSignalTime / newSignalPeriod;
+                double newSignalCyclePosition = newNumberOfSignalCycles % 1.0;          //new cycle position
 
-            double cycleDifference = currentSignalCyclePosition - newSignalCyclePosition;
-            double phaseDifference = cycleDifference * Math.PI * 2.0;
+                double cycleDifference = currentSignalCyclePosition - newSignalCyclePosition;
+                double phaseDifference = cycleDifference * Math.PI * 2.0;
 
-            currentSignalPhaseOffset = phaseDifference;
+                currentSignalPhaseOffset = phaseDifference;
 
-            currentSignalFrequency = newSignalFrequency;
-            currentSignalTime = newSignalTime;
+                currentSignalFrequency = newSignalFrequency;
+                currentSignalTime = newSignalTime;
 
-            currentSignaOutlValue = Math.Sin(currentSignalTime * 2.0 * Math.PI * currentSignalFrequency + currentSignalPhaseOffset);
-            return currentSignaOutlValue;
-        }
-        else
-        {
-            currentSignalFrequency = newSignalFrequency;
-            currentSignalTime = newSignalTime;
-            currentSignaOutlValue = Math.Sin(currentSignalTime * 2.0 * Math.PI * currentSignalFrequency + currentSignalPhaseOffset);
-            return currentSignaOutlValue;
+                currentSignaOutlValue = Math.Sin(currentSignalTime * 2.0 * Math.PI * currentSignalFrequency + currentSignalPhaseOffset);
+                return currentSignaOutlValue;
+            }
+            else
+            {
+                currentSignalFrequency = newSignalFrequency;
+                currentSignalTime = newSignalTime;
+                currentSignaOutlValue = Math.Sin(currentSignalTime * 2.0 * Math.PI * currentSignalFrequency + currentSignalPhaseOffset);
+                return currentSignaOutlValue;
+            }
         }
     }
 }

@@ -1,18 +1,20 @@
-﻿using System;
-using Assets.Scripts.SoundGeneration.Util;
+﻿using Assets.Scripts.SoundGeneration.Util;
 using DarkArtsStudios.SoundGenerator.Module.Oscillator;
 using UnityEngine;
 
-public class Sin : BaseOscillator
+namespace Assets.Scripts.SoundGeneration.Oscillators
 {
-    public static string MenuEntry()
+    public class Sin : BaseOscillator
     {
-        return "Oscillator/SinX";
-    }
+        public static string MenuEntry()
+        {
+            return "Oscillator/SinX";
+        }
 
-    public override float OnAmplitude(float frequency, float time, float duration, int depth)
-    {
-        float phase = this.attribute("Phase").value;
-        return Mathf.Sin(MathUtil.DegToRad((time * frequency + phase) * 360.0f));
+        public override float OnAmplitude(float frequency, float time, float duration, int depth)
+        {
+            float phase = this.attribute("Phase").value;
+            return Mathf.Sin(MathUtil.DegToRad((time * frequency + phase) * 360.0f));
+        }
     }
 }

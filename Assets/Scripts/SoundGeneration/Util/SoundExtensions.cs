@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using DarkArtsStudios.SoundGenerator.Module;
 using UnityEngine;
 using Composition = DarkArtsStudios.SoundGenerator.Composition;
 
-namespace Assets.Scripts.SoundGeneration
+namespace Assets.Scripts.SoundGeneration.Util
 {
     internal static class SoundExtensions
     {

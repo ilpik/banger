@@ -1,29 +1,51 @@
-﻿using System.Collections.Generic;
-using DarkArtsStudios.SoundGenerator.Module;
+﻿using DarkArtsStudios.SoundGenerator.Module;
 using UnityEngine;
 using Composition = DarkArtsStudios.SoundGenerator.Composition;
 
-public class BaseSoundConfiguration
+namespace Assets.Scripts.SoundGeneration.Presets
 {
-    protected Output output;
-
-    public virtual void Configure(Composition composition)
+    public class BaseSoundConfiguration
     {
-        composition.modules.Clear();
-        //todo: add dispose logic
-        composition.modules = new List<BaseModule>();
+        protected Output output;
 
-        output = AddModule<Output>(composition);
+        public void Configure(Composition composition)
+        {
+            ClearModules(composition);
+            output = AddModule<Output>(composition);
+            OnConfigure(composition);
+            new SoundModuleLocationConfiguration().Update(composition);
+        }
+
+        protected virtual void OnConfigure(Composition composition)
+        {
+
+        }
+
+        protected T AddModule<T>(Composition composition) where T : BaseModule
+        {
+            var gameObject = new GameObject();
+            gameObject.name = typeof(T).Name;
+            gameObject.transform.SetParent(composition.transform);
+            var module = gameObject.AddComponent<T>();
+            module.InitializeAttributes();
+            module.InitializeName();
+            composition.modules.Add(module);
+            return module;
+        }
+
+        private void ClearModules(Composition composition)
+        {
+            foreach (Transform child in composition.transform)
+            {
+                if (child.GetComponent<BaseModule>())
+                {
+                    Object.DestroyImmediate(child.gameObject);
+                }
+            }
+
+            composition.modules.Clear();
+
+        }
+
     }
-
-    protected T AddModule<T>(Composition composition) where T : BaseModule
-    {
-        var gameObject = new GameObject();
-        gameObject.transform.SetParent(composition.transform);
-        var module = gameObject.AddComponent<T>();
-        module.InitializeAttributes();
-        composition.modules.Add(module);
-        return module;
-    }
-
 }
