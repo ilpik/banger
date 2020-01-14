@@ -6,10 +6,7 @@ namespace Assets.Scripts.SoundGeneration.Oscillators
 {
     public class Sin : BaseOscillator
     {
-        public static string MenuEntry()
-        {
-            return "Oscillator/SinX";
-        }
+        public static string MenuEntry() => MenuEntryProvider.Oscillator("Sin");
 
         public override float OnAmplitude(float frequency, float time, float duration, int depth)
         {

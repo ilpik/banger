@@ -4,10 +4,7 @@ namespace Assets.Scripts.SoundGeneration.Oscillators
 {
     public class Noise2 : BaseOscillator
     {
-        public static string MenuEntry()
-        {
-            return "Oscillator/Noise2";
-        }
+        public static string MenuEntry() => MenuEntryProvider.Oscillator("Noise");
 
         private System.Random random = new System.Random();
 

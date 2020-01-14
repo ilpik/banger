@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.SoundGeneration.Util;
 using DarkArtsStudios.SoundGenerator.Module;
 using UnityEngine;
 using Composition = DarkArtsStudios.SoundGenerator.Composition;

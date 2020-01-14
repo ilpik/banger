@@ -13,10 +13,7 @@ namespace Assets.Scripts.SoundGeneration.Adsr
 {
     class AdsrEnvelope : BaseModule
     {
-        public static string MenuEntry()
-        {
-            return "Banger/ADSR";
-        }
+        public static string MenuEntry() => MenuEntryProvider.Adsr("NAudio ADSR");
 
         public Vector2 attack;
 
