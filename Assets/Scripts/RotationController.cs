@@ -5,11 +5,22 @@ using UnityEngine;
 public class RotationController : MonoBehaviour
 {
     public float rotationSpeed;
+    public GameObject directionPointer;
+    public Vector3 rotationVec;
 
-    // Start is called before the first frame update
     void Update()
     {
-        transform.Rotate(Vector3.right, rotationSpeed);
+        //transform.Rotate(new Vector3(1,0,1), rotationSpeed);
+        //Debug.Log(Vector3.right);
+        //RotationCntrl();
+    }
+
+    void RotationCntrl()
+    {
+        //Vector3 directionPointerPosition = directionPointer.transform.position;
+        //transform.Rotate(rotationVec, rotationSpeed);
     }
 
 }
+
+
