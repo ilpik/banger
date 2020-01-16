@@ -9,13 +9,13 @@ namespace Assets.Scripts.SoundGeneration
 {
     internal class SoundModuleLocationConfiguration
     {
-        private Vector2 defaultSize = new Vector2(300, 600);
+        private Vector2 defaultSize = new Vector2(300, 100);
         private Vector2 deltaPosition = new Vector2(20, 10);
 
         public void Update(Composition composition)
         {
             List<BaseModule> modules = new List<BaseModule>();
-            UpdateRect(composition.GetOutput(), modules, new Vector2(800, 500));
+            UpdateRect(composition.GetOutput(), modules, new Vector2(800, defaultSize.y + 10));
 
             Vector2 position = Vector2.zero;
             foreach (var notUsedModule in composition.modules.Where(m => !modules.Contains(m)))
@@ -27,7 +27,6 @@ namespace Assets.Scripts.SoundGeneration
 
         private void UpdateRect(BaseModule module, List<BaseModule> passedModules, Vector2 point)
         {
-            Debug.Log(module.name);
             passedModules.Add(module);
             MoveTo(module, point);
             float dy = 0;
@@ -46,7 +45,6 @@ namespace Assets.Scripts.SoundGeneration
         private void MoveTo(BaseModule module, Vector2 point)
         {
             module.visualPlacementRect = new Rect(point.x, point.y, module.visualPlacementRect.width, module.visualPlacementRect.height);
-            Debug.Log("Module: " + module.name + "; rect: " + module.visualPlacementRect);
         }
     }
 }

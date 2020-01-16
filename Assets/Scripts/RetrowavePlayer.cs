@@ -125,7 +125,6 @@ public class RetrowavePlayer : MonoBehaviour
         {
             yield return request.SendWebRequest();
             string json = request.downloadHandler.text;
-            Debug.Log(json);
             var metadata = JsonUtility.FromJson<Metadata>(json);
 
             var track = metadata.body.tracks.First();

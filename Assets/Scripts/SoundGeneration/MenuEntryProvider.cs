@@ -13,5 +13,7 @@ namespace Assets.Scripts.SoundGeneration
         public static string Oscillator(string name) => Get("Oscillator", name);
 
         public static string Adsr(string name) => Get("ADSR", name);
+
+        public static string Filter(string name) => Get("Filter", name);
     }
 }

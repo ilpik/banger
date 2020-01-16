@@ -10,9 +10,14 @@ namespace Assets.Scripts.SoundGeneration
         {
             SoundGeneratorControls controls = (SoundGeneratorControls)target;
 
-            if (GUILayout.Button("Update composition"))
+            if (GUILayout.Button("Reset composition"))
             {
                 controls.UpdateComposition();
+            }
+
+            if (GUILayout.Button("Clear composition"))
+            {
+                controls.ClearComposition();
             }
 
             //serializedObject.Update();
