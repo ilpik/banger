@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -265,6 +265,34 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!83 &81750395
+AudioClip:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: testSound
+  m_LoadType: 0
+  m_Channels: 1
+  m_Frequency: 44100
+  m_BitsPerSample: 32
+  m_Length: 0
+  m_IsTrackerFormat: 0
+  m_Ambisonic: 0
+  m_SubsoundIndex: 0
+  m_PreloadAudioData: 1
+  m_LoadInBackground: 0
+  m_Legacy3D: 0
+  m_Resource:
+    m_Source: 
+    m_Offset: 0
+    m_Size: 0
+  m_CompressionFormat: 0
+  m_EditorResource:
+    m_Source: 
+    m_Offset: 0
+    m_Size: 0
+  m_EditorCompressionFormat: 0
 --- !u!1 &103769241
 GameObject:
   m_ObjectHideFlags: 0
@@ -16938,6 +16966,7 @@ GameObject:
   - component: {fileID: 1506231331}
   - component: {fileID: 1506231330}
   - component: {fileID: 1506231329}
+  - component: {fileID: 1506231333}
   m_Layer: 0
   m_Name: SoundGenerator
   m_TagString: Untagged
@@ -16979,7 +17008,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506231328}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -17082,6 +17111,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1506231333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506231328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4db929c28da92449b134f6f45a2a56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1669206133
 GameObject:
   m_ObjectHideFlags: 0
@@ -17250,12 +17291,12 @@ PrefabInstance:
     - target: {fileID: 108629408886983770, guid: f8b49f9d229541d43b30476c740c2477,
         type: 3}
       propertyPath: m_Intensity
-      value: 500
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 108932929994359170, guid: f8b49f9d229541d43b30476c740c2477,
         type: 3}
       propertyPath: m_Intensity
-      value: 500
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 108978590883566706, guid: f8b49f9d229541d43b30476c740c2477,
         type: 3}
