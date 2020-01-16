@@ -14,6 +14,8 @@ public class GroundSpawnController : MonoBehaviour
     public Transform NextPlatformPosition;
 
     public float spawnDistance = 8;
+
+
     void Start()
     {
     }
@@ -45,5 +47,6 @@ public class GroundSpawnController : MonoBehaviour
     {
         return NextPlatformPosition.position;
     }
+  
 
 }

@@ -4,28 +4,36 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public bool isOnGround;
     public float jumpHeight;
     public float moveSpeed;
-    public float rotationSpeed = 5;
+    public float rotationSpeed;
+    public Transform ball;
+    public Transform ballController;
+
+    public Text textScoreCount;
+    private int scoreCount;
 
     private Rigidbody rb;
     private static PlayerController _instance;
     public static PlayerController Instance => _instance;
 
     private GameObject rotDirectionPointer;
-    public Transform ball;
-    public Transform ballController;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         _instance = this;
         rotDirectionPointer = GameObject.FindGameObjectWithTag("DirectionPointer");
     }
-
+    void Start()
+    {
+        scoreCount = 0;
+        SetCountText();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -64,7 +72,21 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("PickUp"))
+        {
+            other.gameObject.SetActive(false);
+            scoreCount = scoreCount+10;
+            SetCountText();
+            Debug.Log(scoreCount);
+        }
+    }
+    void SetCountText()
+    {
+        textScoreCount.text = "Count: " + scoreCount.ToString();
 
-    
+    }
+
 
 }

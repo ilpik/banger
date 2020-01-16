@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - DirectionPointer
+  - PickUp
+  - RespawnPoint
+  - PickUpsRespawnPoints
   layers:
   - Default
   - TransparentFX
