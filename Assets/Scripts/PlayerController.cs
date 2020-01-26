@@ -79,7 +79,6 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             scoreCount = scoreCount+10;
             SetCountText();
-            Debug.Log(scoreCount);
         }
     }
     void SetCountText()

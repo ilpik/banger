@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class GroundSpawnController : MonoBehaviour
 {
-    public GameObject groundSpawner;
+    //public GameObject groundSpawner;
+    public List<GameObject> grounds;
 
     private Vector3 playerPosition;
-    private Vector3 clonePosition;
     private Vector3 spawnPosition;
     private bool hasSpawned;
+    private int groundIndex;
+
 
     public Transform NextPlatformPosition;
 
@@ -22,7 +24,7 @@ public class GroundSpawnController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //    clonePosition = groundSpawner.transform.position;
+        //clonePosition = groundSpawner.transform.position;
         playerPosition = PlayerController.Instance.transform.position;
         spawnPosition = transform.position;
         var distance = GetDistance(playerPosition, spawnPosition);
@@ -30,8 +32,8 @@ public class GroundSpawnController : MonoBehaviour
         if (!hasSpawned && distance <= spawnDistance)
         {
             var position = GetNextPlatformPosition();
-            var ground = Resources.Load("Ground");
-            var newGround = Instantiate(ground, position, Quaternion.identity, this.transform.parent);
+            var ground = NewGround();
+            var newGround = Instantiate(ground, position, Quaternion.identity, transform.parent);
             newGround.name = this.name;
             hasSpawned = true;
         }
@@ -47,6 +49,10 @@ public class GroundSpawnController : MonoBehaviour
     {
         return NextPlatformPosition.position;
     }
-  
 
+    GameObject NewGround()
+    {
+        groundIndex = Random.Range(0, grounds.Count);
+        return grounds[groundIndex];
+    }
 }

@@ -5,15 +5,15 @@ using System.Linq;
 
 public class PickUpsRespawnPoints : MonoBehaviour
 {
-    private Transform[] points;
-    private void Start()
-    {
+    //    private Transform[] points;
+    //    private void Start()
+    //    {
 
-    }
-    public Transform[] GetRespawnPoints()
-    {
-        points = this.GetComponentsInChildren<Transform>().Where(x => x.gameObject != gameObject).ToArray();
-        Debug.Log(points.Length) ;
-        return points;
-    }
+    //    }
+    //    public Transform[] GetRespawnPoints()
+    //    {
+    //        points = this.GetComponentsInChildren<Transform>().Where(x => x.gameObject != gameObject).ToArray();
+    //        Debug.Log(points.Length) ;
+    //        return points;
+    //    }
 }
