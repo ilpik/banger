@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.SoundGeneration.Modules;
 using Assets.Scripts.SoundGeneration.Oscillators;
 using Assets.Scripts.SoundGeneration.Presets;
 using Assets.Scripts.SoundGeneration.Util;
@@ -56,12 +57,19 @@ namespace Assets.Scripts.SoundGeneration
             composition = GetComponent<Composition>();
             //UpdateConfiguration();
             output = composition.GetOutput();
+            input = composition.modules.OfType<NoteIn>().SingleOrDefault();
+            if (input == null)
+                Debug.LogError("No NoteIn found to play");
+
         }
 
         public Composition composition;
 
         [NonSerialized]
         public Output output;
+
+        [NonSerialized]
+        public NoteIn input;
 
         public BaseSoundConfiguration configuration;
 
@@ -89,44 +97,44 @@ namespace Assets.Scripts.SoundGeneration
 
         private MonoMelody melody;
 
-        private void PlayNote(float[] data, int channels, float frequency, float duration)
-        {
-            var currentDspTime = AudioSettings.dspTime;
-            var dataLen = data.Length / channels;   // the actual data length for each channel
-            var chunkTime = (double)dataLen / sampleRate;   // the time that each chunk of data lasts
-            double currentFreq = mainFrequency;
+        //private void PlayNote(float[] data, int channels, float frequency, float duration)
+        //{
+        //    var currentDspTime = AudioSettings.dspTime;
+        //    var dataLen = data.Length / channels;   // the actual data length for each channel
+        //    var chunkTime = (double)dataLen / sampleRate;   // the time that each chunk of data lasts
+        //    double currentFreq = mainFrequency;
 
-            var dspTimeStep = chunkTime / dataLen;	// the time of each dsp step. (the time that each individual audio sample (actually a float value) lasts)
+        //    var dspTimeStep = chunkTime / dataLen;	// the time of each dsp step. (the time that each individual audio sample (actually a float value) lasts)
 
-            var sin = new SinWaveOscillator();
-            for (int i = 0; i < dataLen; i++)
-            {
-                var preciseDspTime = currentDspTime + i * dspTimeStep;
+        //    var sin = new SinWaveOscillator();
+        //    for (int i = 0; i < dataLen; i++)
+        //    {
+        //        var preciseDspTime = currentDspTime + i * dspTimeStep;
 
-                double signalValue = 0.0;
-                var fromOutput = output.OnAmplitude((float)currentFreq, (float)preciseDspTime, (float)chunkTime, 0, sampleRate);
-                signalValue += fromOutput;
-                //signalValue += sin.calculateSignalValue(preciseDspTime, currentFreq);
-                float x = masterVolume * 0.5f * (float)signalValue;
+        //        double signalValue = 0.0;
+        //        var fromOutput = output.OnAmplitude((float)preciseDspTime, 0, sampleRate);
+        //        signalValue += fromOutput;
+        //        //signalValue += sin.calculateSignalValue(preciseDspTime, currentFreq);
+        //        float x = masterVolume * 0.5f * (float)signalValue;
 
-                for (int j = 0; j < channels; j++)
-                {
-                    data[i * channels + j] = x;
-                    //Debug.Log("Put: " + x);
-                }
+        //        for (int j = 0; j < channels; j++)
+        //        {
+        //            data[i * channels + j] = x;
+        //            //Debug.Log("Put: " + x);
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
-        void OnAudioFilterRead(float[] data, int channels)
-        {
-            //foreach (var note in melody.notes)
-            //{
-            //    PlayNote(data, channels, note.Frequency, note.Duration);
-            //}
+        //void OnAudioFilterRead(float[] data, int channels)
+        //{
+        //    //foreach (var note in melody.notes)
+        //    //{
+        //    //    PlayNote(data, channels, note.Frequency, note.Duration);
+        //    //}
 
-            //waveForm = data;
-        }
+        //    //waveForm = data;
+        //}
     }
 }

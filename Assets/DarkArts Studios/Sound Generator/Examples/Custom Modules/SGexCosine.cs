@@ -1,11 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class SGexCosine : DarkArtsStudios.SoundGenerator.Module.BaseModule {
 	public static string MenuEntry() { return "Examples/Oscillator/Cosine (C#)"; }
-	
-	public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+
+    public Attribute frequency;
+
+    public override void InitializeAttributes()
+    {
+        base.InitializeAttributes();
+        frequency = AddFrequency();
+    }
+
+    public override double OnAmplitude(double time, int depth, int sampleRate)
 	{
-		return Mathf.Cos(Mathf.Deg2Rad * time * frequency * 360f);
+		return Math.Cos(Mathf.Deg2Rad * time * frequency.getAmplitudeOrValue(time, depth, sampleRate) * 360f);
 	}
 
 }

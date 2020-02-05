@@ -19,31 +19,36 @@ namespace Assets.Scripts.SoundGeneration.Adsr
         //private const int bufferSize = 500;
         private Queue<float> buffer = new Queue<float>();
 
+        private Attribute frequency;
+
         public override void InitializeAttributes()
         {
             AddInput();
+            frequency = AddFrequency();
         }
 
-        public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
         {
-            buffer.Enqueue(frequency);
-            int delayMilliseconds = 500; // half a second
-            int delaySamples = (int)((float)delayMilliseconds * 44.1f); // assumes 44100 Hz sample rate
-            float decay = 0.5f;
+            return frequency.getAmplitudeOrValue(time, depth + 1, sampleRate);
+            //var f = frequency.
+            //buffer.Enqueue(frequency);
+            //int delayMilliseconds = 500; // half a second
+            //int delaySamples = (int)((float)delayMilliseconds * 44.1f); // assumes 44100 Hz sample rate
+            //float decay = 0.5f;
 
-            float input = this.GetInput().amplitude(frequency, time, duration, depth, sampleRate);
+            //float input = this.GetInput().amplitude(time, depth, sampleRate);
 
-            if (buffer.Count < delaySamples)
-            {
-                return input;
-            }
-
-            return input + buffer.Dequeue() * decay;
-            //for (int i = 0; i < buffer.length - delaySamples; i++)
+            //if (buffer.Count < delaySamples)
             //{
-            //    // WARNING: overflow potential
-            //    buffer[i + delaySamples] += (short)((float)buffer[i] * decay);
+            //    return input;
             //}
+
+            //return input + buffer.Dequeue() * decay;
+            ////for (int i = 0; i < buffer.length - delaySamples; i++)
+            ////{
+            ////    // WARNING: overflow potential
+            ////    buffer[i + delaySamples] += (short)((float)buffer[i] * decay);
+            ////}
 
 
         }
@@ -61,7 +66,7 @@ namespace Assets.Scripts.SoundGeneration.Adsr
             filter = BiQuadFilter.LowPassFilter(44100, 1500, 1);
         }
 
-        public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
         {
             //var generator = this.GetInput();
             //if (generator == null)
@@ -136,7 +141,7 @@ namespace Assets.Scripts.SoundGeneration.Adsr
         private Stage CurrentStage = Stage.Off;
         EnvelopeGenerator g = new EnvelopeGenerator();
 
-        public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
         {
             g.AttackRate = attackAtt.value;
             g.DecayRate = decayAtt.value;
@@ -146,7 +151,7 @@ namespace Assets.Scripts.SoundGeneration.Adsr
             
             //var sample = 
             //filter.Transform()
-            return Input.amplitude(frequency, time, duration, depth + 1, sampleRate) * g.Process();
+            return Input.amplitude(time, depth + 1, sampleRate) * g.Process();
             //return g.GetOutput();
             //return g.Process();
             //float currentLevel = 1.0f;

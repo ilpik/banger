@@ -17,12 +17,12 @@ namespace Assets.Scripts.SoundGeneration
             AddInput();
         }
 
-        public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
         {
             float dur = 0;
             float decay = Decay.value;
-            float value = this.GetInput().amplitude(frequency, time, duration, depth, sampleRate);
-            value += this.GetInput().amplitude(frequency, time - Delay.value, duration, depth, sampleRate) * decay;
+            double value = this.GetInput().amplitude(time, depth, sampleRate);
+            value += this.GetInput().amplitude(time - Delay.value, depth, sampleRate) * decay;
             return value;
         }
     }

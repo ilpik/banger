@@ -16,21 +16,18 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			attributes.Add(new Attribute("Multiplier", 1f));
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float num = 0f;
-			if (depth > BaseModule.TOODEEP)
-			{
-				return num;
-			}
-			float num2 = attribute("Multiplier").value;
+			double num = 0;
+
+			double num2 = attribute("Multiplier").value;
 			if ((bool)attribute("Multiplier").generator)
 			{
-				num2 *= attribute("Multiplier").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				num2 *= attribute("Multiplier").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			if ((bool)attribute("Input").generator)
 			{
-				num += attribute("Input").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				num += attribute("Input").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			return num * num2;
 		}

@@ -8,7 +8,6 @@ namespace DarkArtsStudios.SoundGenerator.Module
 	{
 		public enum EnvelopeType
 		{
-			Duration,
 			Time,
 			WaveLength
 		}
@@ -16,7 +15,9 @@ namespace DarkArtsStudios.SoundGenerator.Module
 		[SerializeField]
 		public AnimationCurve envelope = new AnimationCurve(new Keyframe(0f, -1f), new Keyframe(1f, 1f));
 
-		[SerializeField]
+        public Attribute frequency;
+
+        [SerializeField]
 		public EnvelopeType envelopeType;
 
 		public static string MenuEntry()
@@ -27,18 +28,17 @@ namespace DarkArtsStudios.SoundGenerator.Module
 		public override void InitializeAttributes()
 		{
 			showPreviewTexture = false;
-		}
+            frequency = AddFrequency();
+        }
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
 			switch (envelopeType)
 			{
-			case EnvelopeType.Duration:
-				return envelope.Evaluate(time / duration);
 			case EnvelopeType.Time:
-				return envelope.Evaluate(time);
+				return envelope.Evaluate((float)time);
 			case EnvelopeType.WaveLength:
-				return envelope.Evaluate(time * frequency);
+				return envelope.Evaluate((float)(time * frequency.getAmplitudeOrValue(time, depth + 1, sampleRate)));
 			default:
 				return 0f;
 			}

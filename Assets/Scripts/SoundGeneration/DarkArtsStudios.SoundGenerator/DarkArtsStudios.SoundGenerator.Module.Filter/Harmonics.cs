@@ -24,9 +24,9 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			attributes.Add(attribute2);
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float num = 0f;
+			double num = 0f;
 			if (depth > BaseModule.TOODEEP)
 			{
 				return num;
@@ -34,16 +34,16 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			Attribute attribute = base.attribute("Input");
 			Attribute attribute2 = base.attribute("Tone Offset");
 			Attribute attribute3 = base.attribute("Tone Strength");
-			float num2 = attribute3.value;
+			double num2 = attribute3.value;
 			if ((bool)attribute3.generator)
 			{
-				num2 *= attribute3.generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				num2 *= attribute3.generator.amplitude(time, depth + 1, sampleRate);
 			}
 			if ((bool)attribute.generator)
 			{
-				num += attribute.generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
-				num += attribute.generator.amplitude(frequency / (attribute2.value + 1f), time, duration, depth + 1, sampleRate) * num2;
-				num += attribute.generator.amplitude(frequency * (attribute2.value + 1f), time, duration, depth + 1, sampleRate) * num2;
+				num += attribute.generator.amplitude(time, depth + 1, sampleRate);
+				num += attribute.generator.amplitude(time, depth + 1, sampleRate) * num2;
+				num += attribute.generator.amplitude(time, depth + 1, sampleRate) * num2;
 			}
 			return num;
 		}

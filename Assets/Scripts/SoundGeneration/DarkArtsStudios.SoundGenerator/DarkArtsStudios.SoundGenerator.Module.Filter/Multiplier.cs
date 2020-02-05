@@ -14,15 +14,15 @@ namespace Assets.Scripts.SoundGeneration.DarkArtsStudios.SoundGenerator.DarkArts
             attributes.Add(new Attribute("Input", _hiddenValue: true));
         }
 
-        public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
         {
-            float? num = null;
+            double? num = null;
 
             foreach (Attribute attribute in attributes)
             {
                 if ((bool)attribute.generator)
                 {
-                    var value = attribute.generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+                    var value = attribute.generator.amplitude(time, depth + 1, sampleRate);
                     num = num == null ? value : num * value;
                 }
             }

@@ -18,15 +18,15 @@ public class SGexSharpen : DarkArtsStudios.SoundGenerator.Module.BaseModule
         attributes.Add(distance);
     }
 
-    public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+    public override double OnAmplitude(double time, int depth, int sampleRate)
     {
-        float result = 0;
+        double result = 0;
         if (attribute("Input").generator)
         {
             float distance = attribute("Distance").value;
-            float local = attribute("Input").generator.amplitude(frequency, time, duration, depth + 1, sampleRate) * 2;
-            float surround = attribute("Input").generator.amplitude(frequency, time - distance, duration, depth + 1, sampleRate);
-            surround += attribute("Input").generator.amplitude(frequency, time + distance, duration, depth + 1, sampleRate);
+            double local = attribute("Input").generator.amplitude(time, depth + 1, sampleRate) * 2;
+            double surround = attribute("Input").generator.amplitude(time - distance, depth + 1, sampleRate);
+            surround += attribute("Input").generator.amplitude(time + distance, depth + 1, sampleRate);
             surround /= 4;
             result += local + (local - surround);
         }

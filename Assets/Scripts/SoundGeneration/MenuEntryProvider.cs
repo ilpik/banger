@@ -15,5 +15,7 @@ namespace Assets.Scripts.SoundGeneration
         public static string Adsr(string name) => Get("ADSR", name);
 
         public static string Filter(string name) => Get("Filter", name);
+
+        public static string Sequencer(string name) => Get("Sequencer", name);
     }
 }

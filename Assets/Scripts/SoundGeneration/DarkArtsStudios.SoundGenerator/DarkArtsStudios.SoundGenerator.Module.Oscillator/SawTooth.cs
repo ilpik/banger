@@ -1,3 +1,4 @@
+using Assets.Scripts.SoundGeneration.Util;
 using UnityEngine;
 
 namespace DarkArtsStudios.SoundGenerator.Module.Oscillator
@@ -9,9 +10,9 @@ namespace DarkArtsStudios.SoundGenerator.Module.Oscillator
 			return "Oscillator/SawTooth";
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			return (Mathf.Repeat(time * frequency + attribute("Phase").value, 1f) - 0.5f) * 2f;
+			return (MathUtil.Repeat(time * frequency.getAmplitudeOrValue(time, depth + 1, sampleRate) + phase.getAmplitudeOrValue(time, depth + 1, sampleRate), 1f) - 0.5f) * 2f;
 		}
 	}
 }

@@ -23,10 +23,9 @@ namespace DarkArtsStudios.SoundGenerator
 			foreach (BaseModule module in modules)
 			{
 				yield return null;
-				if ((bool)module && module.GetType() == typeof(Output))
+				if (module && module is Output output)
 				{
-					Output output = module as Output;
-					foreach (float item in output.IGenerate())
+                    foreach (float item in output.IGenerate())
 					{
 						_ = item;
 						yield return null;

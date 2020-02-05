@@ -16,21 +16,21 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			attributes.Add(new Attribute("Delay"));
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float num = 0f;
+			double num = 0f;
 			if (depth > BaseModule.TOODEEP)
 			{
 				return num;
 			}
-			float num2 = attribute("Delay").value;
+			double num2 = attribute("Delay").value;
 			if ((bool)attribute("Delay").generator)
 			{
-				num2 *= attribute("Delay").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				num2 *= attribute("Delay").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			if ((bool)attribute("Input").generator)
 			{
-				num += attribute("Input").generator.amplitude(frequency, time - num2, duration, depth + 1, sampleRate);
+				num += attribute("Input").generator.amplitude(time - num2, depth + 1, sampleRate);
 			}
 			return num;
 		}

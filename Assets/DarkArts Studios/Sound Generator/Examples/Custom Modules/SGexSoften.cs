@@ -17,15 +17,15 @@ public class SGexSoften : DarkArtsStudios.SoundGenerator.Module.BaseModule {
 		attributes.Add(distance);
 	}
 
-	public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+	public override double OnAmplitude(double time, int depth, int sampleRate)
 	{
-		float result = 0;
+		double result = 0;
 		if (attribute ("Input").generator)
 		{
-			float distance = attribute ("Distance").value;
-			result += attribute ("Input").generator.amplitude(frequency,time - distance,duration,depth+1, sampleRate);
-			result += attribute ("Input").generator.amplitude(frequency,time           ,duration,depth+1, sampleRate)*2;
-			result += attribute ("Input").generator.amplitude(frequency,time + distance,duration,depth+1, sampleRate);
+            double distance = attribute ("Distance").getAmplitudeOrValue(time, depth, sampleRate);
+			result += attribute ("Input").generator.amplitude(time - distance,depth+1, sampleRate);
+			result += attribute ("Input").generator.amplitude(time,depth+1, sampleRate)*2;
+			result += attribute ("Input").generator.amplitude(time + distance,depth+1, sampleRate);
 			result /= 4;
 		}
 		return result;

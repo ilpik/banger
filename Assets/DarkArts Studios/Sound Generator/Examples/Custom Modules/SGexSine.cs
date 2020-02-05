@@ -1,12 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class SGexSine : DarkArtsStudios.SoundGenerator.Module.BaseModule
 {
     public static string MenuEntry() { return "Examples/Oscillator/Sine (C#)"; }
 
-    public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+    public Attribute frequency;
+
+    public override void InitializeAttributes()
     {
-        return Mathf.Sin(Mathf.Deg2Rad * time * frequency * 360f);
+        base.InitializeAttributes();
+        frequency = AddFrequency();
+    }
+
+    public override double OnAmplitude(double time, int depth, int sampleRate)
+    {
+        return Math.Sin(Mathf.Deg2Rad * time * frequency.getAmplitudeOrValue(time, depth, sampleRate) * 360f);
     }
 
 }

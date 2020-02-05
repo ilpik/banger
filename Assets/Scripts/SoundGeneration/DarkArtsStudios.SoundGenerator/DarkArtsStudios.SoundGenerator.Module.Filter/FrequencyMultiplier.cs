@@ -10,29 +10,34 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			return "Filter/Frequency Multiplier";
 		}
 
-		public override void InitializeAttributes()
+        public Attribute frequency;
+
+        public override void InitializeAttributes()
 		{
 			attributes.Add(new Attribute("Input", _hiddenValue: true));
 			attributes.Add(new Attribute("Multiplier"));
 			attribute("Multiplier").value = 1f;
-		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+            frequency = AddFrequency();
+        }
+
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float result = 0f;
+			double result = 0f;
 			if (depth > BaseModule.TOODEEP)
 			{
 				return result;
 			}
-			float num = attribute("Multiplier").value;
+
+			double num = attribute("Multiplier").value;
 			if ((bool)attribute("Multiplier").generator)
 			{
-				num *= attribute("Multiplier").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				num *= attribute("Multiplier").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			if ((bool)attribute("Input").generator)
 			{
-				float frequency2 = frequency * num;
-				result = attribute("Input").generator.amplitude(frequency2, time, duration, depth + 1, sampleRate);
+				double frequency2 = frequency.getAmplitudeOrValue(time, depth, sampleRate) * num;
+				result = attribute("Input").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			return result;
 		}

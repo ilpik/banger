@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.SoundGeneration.AttributeBuilder;
+using DarkArtsStudios.SoundGenerator.DarkArtsStudios.Audio;
 using UnityEngine;
 
 namespace DarkArtsStudios.SoundGenerator.Module
@@ -16,7 +18,8 @@ namespace DarkArtsStudios.SoundGenerator.Module
 				FLOAT,
 				FLOAT_POSITIVE,
 				FREQUENCY,
-				SLIDER
+				SLIDER,
+                BUTTON
 			}
 
 			[SerializeField]
@@ -28,7 +31,10 @@ namespace DarkArtsStudios.SoundGenerator.Module
 			[SerializeField]
 			public BaseModule generator;
 
-			[SerializeField]
+            [SerializeField]
+            public bool pressed;
+
+            [SerializeField]
 			public bool hiddenValue;
 
 			[SerializeField]
@@ -79,9 +85,24 @@ namespace DarkArtsStudios.SoundGenerator.Module
 				value = _value;
 				_CoreInit();
 			}
-		}
+            
+            public double getAmplitudeOrValue(double time, int depth, int sampleRate)
+            {
+                if (depth >= TOODEEP)
+                {
+                    Debug.Log($"Depth is too big for module {this.GetType().Name}");
+                    return this.value;
+                }
 
-		private static Color PreviewBackground = Color.black;
+                if (this.generator == null)
+                    return this.value;
+
+                return this.generator.amplitude(time, depth, sampleRate);
+            }
+
+        }
+
+        private static Color PreviewBackground = Color.black;
 
 		private static Color PreviewGrid = new Color(1f, 0.5f, 0.25f, 0.25f);
 
@@ -106,7 +127,7 @@ namespace DarkArtsStudios.SoundGenerator.Module
 
 		public Rect visualPlacementRect = new Rect(10f, 10f, 100f, 100f);
 
-		public abstract float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate);
+		public abstract double OnAmplitude(double time, int depth, int sampleRate);
 
         public virtual void InitializePlayback()
         {
@@ -117,16 +138,17 @@ namespace DarkArtsStudios.SoundGenerator.Module
 		{
 		}
 
-		public float amplitude(float frequency, float time, float duration, int depth, int sampleRate)
+
+        public double amplitude(double time, int depth, int sampleRate)
 		{
-			latestFrequency = frequency;
-			latestDuration = duration;
-			return OnAmplitude(frequency, time, duration, depth, sampleRate);
+			//latestFrequency = frequency;
+			//latestDuration = duration;
+			return OnAmplitude(time, depth, sampleRate);
 		}
 
 		public Attribute attribute(string attributeName)
 		{
-			foreach (Attribute attribute in attributes)
+			foreach (Attribute attribute in attributes.ToList())
 			{
 				if (attribute.name == attributeName)
 				{
@@ -153,14 +175,14 @@ namespace DarkArtsStudios.SoundGenerator.Module
 			base.name = GetType().Name;
 		}
 
-		public void renderToPreviewTexture(ref Texture2D previewTexture)
+		public virtual void renderToPreviewTexture(ref Texture2D previewTexture)
 		{
 			float frequency = latestFrequency;
 			float num = latestDuration;
 			for (int i = 0; i < previewTexture.width; i++)
 			{
-				float a = (amplitude(frequency, (num * (float)i - 1f) / (float)previewTexture.width, num, 1, 44100) + 1f) * (float)(previewTexture.height - 2 * PreviewTextureHeightPadding) / 2f + (float)PreviewTextureHeightPadding;
-				float b = (amplitude(frequency, num * (float)i / (float)previewTexture.width, num, 1, 44100) + 1f) * (float)(previewTexture.height - 2 * PreviewTextureHeightPadding) / 2f + (float)PreviewTextureHeightPadding;
+				float a = (float)(amplitude((num * (float)i - 1f) / (float)previewTexture.width, 1, 44100) + 1f) * (float)(previewTexture.height - 2 * PreviewTextureHeightPadding) / 2f + (float)PreviewTextureHeightPadding;
+				float b = (float)(amplitude(num * (float)i / (float)previewTexture.width, 1, 44100) + 1f) * (float)(previewTexture.height - 2 * PreviewTextureHeightPadding) / 2f + (float)PreviewTextureHeightPadding;
 				float num2 = Mathf.Min(a, b);
 				float num3 = Mathf.Max(a, b);
 				for (int j = 0; j < previewTexture.height; j++)
@@ -191,6 +213,11 @@ namespace DarkArtsStudios.SoundGenerator.Module
             var input = new Attribute("Input", _hiddenValue: true);
             attributes.Add(input);
             return input;
+        }
+
+        protected Attribute AddFrequency()
+        {
+            return AddAttribute("Frequency", b => b.WithType(Attribute.AttributeType.FREQUENCY).WithValue(Music.Frequency(3, 3)));
         }
 
         protected Attribute AddAttribute(string attributeName, Func<AttributeBuilder, AttributeBuilder> builder)

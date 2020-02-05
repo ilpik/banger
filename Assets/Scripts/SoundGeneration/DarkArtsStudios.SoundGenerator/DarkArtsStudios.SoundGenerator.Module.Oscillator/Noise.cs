@@ -9,7 +9,7 @@ namespace DarkArtsStudios.SoundGenerator.Module.Oscillator
 			return "Oscillator/Noise";
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
 			return Random.value * 2f - 1f;
 		}

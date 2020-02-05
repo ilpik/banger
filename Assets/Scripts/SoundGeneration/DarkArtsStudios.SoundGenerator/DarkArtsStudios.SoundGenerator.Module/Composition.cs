@@ -30,16 +30,16 @@ namespace DarkArtsStudios.SoundGenerator.Module
 			}
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float num = 0f;
+			double num = 0;
 			if (composition != null)
 			{
 				foreach (BaseModule module in composition.modules)
 				{
 					if (module is Output)
 					{
-						num += (module as Output).OnAmplitude(frequency, time, duration, depth + 1, sampleRate);
+						num += (module as Output).OnAmplitude(time, depth + 1, sampleRate);
 					}
 				}
 				return num;

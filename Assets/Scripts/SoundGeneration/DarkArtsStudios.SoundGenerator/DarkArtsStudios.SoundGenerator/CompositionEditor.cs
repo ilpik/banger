@@ -13,7 +13,22 @@ namespace DarkArtsStudios.SoundGenerator
 	[InitializeOnLoad]
 	internal class CompositionEditor : EditorWindow
 	{
-		[NonSerialized]
+        private static List<CompositionEditor> instances = new List<CompositionEditor>();
+
+        private static void EditorUpdate()
+        {
+            foreach (var instance in instances)
+            {
+                instance.Repaint();
+            }
+        }
+
+        public CompositionEditor()
+        {
+            instances.Add(this);
+        }
+        
+        [NonSerialized]
 		private static Color drawNodeCurveColour;
 
 		[NonSerialized]
@@ -188,7 +203,8 @@ namespace DarkArtsStudios.SoundGenerator
 
 		static CompositionEditor()
 		{
-			drawNodeCurveColour = new Color(0.5f, 0.75f, 0.5f, 0.75f);
+            EditorApplication.update += EditorUpdate;
+            drawNodeCurveColour = new Color(0.5f, 0.75f, 0.5f, 0.75f);
 			_zoomSpeed = 1.2f;
 			RepulsionDistance = 50f;
 			RepulsionDistancePlacementBuffer = 5f;

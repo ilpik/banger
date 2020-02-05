@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DarkArtsStudios.SoundGenerator.Module
 {
-	[CustomEditor(typeof(Output), true)]
+    [CustomEditor(typeof(Output), true)]
 	internal class OutputEditor : BaseModuleEditor
 	{
 		private AudioSource audioSource;
@@ -15,7 +15,7 @@ namespace DarkArtsStudios.SoundGenerator.Module
 
 		private bool loopSound;
 
-		public override Rect OnModuleGUI(Rect innerRect)
+        public override Rect OnModuleGUI(Rect innerRect)
 		{
 			innerRect.width = 200f;
 			Rect rect = base.OnModuleGUI(innerRect);
@@ -47,42 +47,48 @@ namespace DarkArtsStudios.SoundGenerator.Module
 				96000
 			});
 			Rect position3 = new Rect(innerRect.x, position2.y + position2.height, innerRect.width - BaseModuleEditor.AttributeHeight, BaseModuleEditor.AttributeHeight);
-			Rect position4 = new Rect(innerRect.x + innerRect.width - BaseModuleEditor.AttributeHeight, position2.y + position2.height, BaseModuleEditor.AttributeHeight, BaseModuleEditor.AttributeHeight);
-			EditorGUI.LabelField(position3, "Smooth Loop");
-			output.smoothLoop = EditorGUI.Toggle(position4, output.smoothLoop);
-			Rect position5 = new Rect(innerRect.x, position3.y + position3.height, innerRect.width / 3f, BaseModuleEditor.AttributeHeight);
-			Rect position6 = new Rect(innerRect.x + innerRect.width / 3f, position3.y + position3.height, innerRect.width / 3f, BaseModuleEditor.AttributeHeight);
-			EditorGUI.BeginChangeCheck();
-			bool num = GUI.Button(position5, global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent("Play", Fugue.icon("control"), "Generate and play this output"));
-			loopSound = GUI.Toggle(position6, loopSound, global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent("Loop", Fugue.icon("arrow-circle"), "Generate and loop this output"), "Button");
+			Rect position5 = new Rect(innerRect.x, position3.y + position3.height, 2 * innerRect.width / 3f, BaseModuleEditor.AttributeHeight);
+            EditorGUI.BeginChangeCheck();
+			//bool num = GUI.Button(position5, global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent("Play", Fugue.icon("control"), "Generate and play this output"));
+            bool isPlaying = audioSource?.isPlaying == true;
+			bool num = GUI.Button(position5, global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent(isPlaying ? "Stop" : "Play", isPlaying ? Fugue.icon("control-stop") : Fugue.icon("control"), "Play/Stop"));
+			//loopSound = GUI.Toggle(position6, loopSound, global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent("Loop", Fugue.icon("arrow-circle"), "Generate and loop this output"), "Button");
 			if (EditorGUI.EndChangeCheck())
 			{
-				if (audioSource == null)
-				{
-					GameObject gameObject = GameObject.Find(AudioSourceGameObjectName);
-					if (!gameObject)
-					{
-						gameObject = new GameObject(AudioSourceGameObjectName);
-						gameObject.transform.position = Vector3.zero;
-						AudioListener audioListener = (AudioListener)Object.FindObjectOfType(typeof(AudioListener));
-						if ((bool)audioListener)
-						{
-							gameObject.transform.position = audioListener.gameObject.transform.position;
-						}
-						gameObject.AddComponent(typeof(AudioSource));
-						gameObject.hideFlags = HideFlags.HideAndDontSave;
-					}
-					audioSource = gameObject.GetComponent<AudioSource>();
-					audioSource.rolloffMode = AudioRolloffMode.Linear;
-				}
-				audioSource.Stop();
-			}
-			if (num || loopSound)
+                if (audioSource == null)
+                {
+                    //GameObject gameObject = GameObject.Find(AudioSourceGameObjectName);
+                    //if (!gameObject)
+                    //{
+                    //    gameObject = new GameObject(AudioSourceGameObjectName);
+                    //    gameObject.transform.position = Vector3.zero;
+                    //    AudioListener audioListener = (AudioListener)Object.FindObjectOfType(typeof(AudioListener));
+                    //    if ((bool)audioListener)
+                    //    {
+                    //        gameObject.transform.position = audioListener.gameObject.transform.position;
+                    //    }
+                    //    gameObject.AddComponent(typeof(AudioSource));
+                    //    gameObject.hideFlags = HideFlags.HideAndDontSave;
+                    //}
+                    //audioSource = gameObject.GetComponent<AudioSource>();
+                    //audioSource.rolloffMode = AudioRolloffMode.Linear;
+                    audioSource = output.gameObject.AddComponent<AudioSource>();
+                    audioSource.playOnAwake = false;
+                    audioSource.rolloffMode = AudioRolloffMode.Linear;
+                }
+                //audioSource.Stop();
+            }
+			if (num)
 			{
-				output.Generate();
-				audioSource.clip = output.audioClip;
-				audioSource.loop = loopSound;
-				audioSource.Play();
+                if (audioSource.isPlaying)
+                    audioSource.Stop();
+                else
+                    audioSource.Play();
+                //            output.OnAudioFilterRead();
+				//output.Generate();
+				//audioSource.clip = output.audioClip;
+				//audioSource.loop = loopSound;
+				//audioSource.Play();
 			}
 			if (GUI.Button(new Rect(innerRect.x + 2f * innerRect.width / 3f, position5.y, innerRect.width / 3f, BaseModuleEditor.AttributeHeight), global::DarkArtsStudios.SoundGenerator.DarkArtsStudios.Core.GUIUtility.TempContent("Export", Fugue.icon("disk-black"), "Export WAV Audio File")))
 			{

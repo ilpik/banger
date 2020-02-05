@@ -1,4 +1,5 @@
 using System;
+using Assets.Scripts.SoundGeneration.Util;
 using UnityEngine;
 
 namespace DarkArtsStudios.SoundGenerator.Module
@@ -16,7 +17,15 @@ namespace DarkArtsStudios.SoundGenerator.Module
 			return "Assets/AudioClip";
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+        public Attribute frequency;
+
+        public override void InitializeAttributes()
+        {
+            base.InitializeAttributes();
+            frequency = AddFrequency();
+        }
+
+        public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
 			float num = 0f;
 			if (audioClip != null)
@@ -26,7 +35,7 @@ namespace DarkArtsStudios.SoundGenerator.Module
 					audioData = new float[audioClip.samples * audioClip.channels];
 					audioClip.GetData(audioData, 0);
 				}
-				int num2 = Mathf.RoundToInt(time * (float)audioClip.frequency * (frequency / 261.6255f));
+				int num2 = MathUtil.RoundToInt(time * (float)audioClip.frequency * (frequency.getAmplitudeOrValue(time, depth + 1, sampleRate) / 261.6255f));
 				if (num2 >= 0 && num2 < audioClip.samples)
 				{
 					for (int i = 0; i < audioClip.channels; i++)

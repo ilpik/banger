@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.SoundGeneration;
+using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class AudioTest : MonoBehaviour
+public class AudioTest : MonoBehaviour, IAudioFilter
 {
     public double bpm = 140.0F;
     public float gain = 0.5F;
@@ -24,7 +25,7 @@ public class AudioTest : MonoBehaviour
         running = true;
     }
 
-    void OnAudioFilterRead(float[] data, int channels)
+    public void OnAudioFilterRead(float[] data, int channels)
     {
         if (!running)
             return;

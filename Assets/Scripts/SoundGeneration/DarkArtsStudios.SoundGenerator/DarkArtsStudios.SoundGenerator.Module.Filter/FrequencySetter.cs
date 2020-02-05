@@ -21,21 +21,21 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			attributes.Add(attribute);
 		}
 
-		public override float OnAmplitude(float _frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float result = 0f;
+			double result = 0f;
 			if (depth > BaseModule.TOODEEP)
 			{
 				return result;
 			}
-			float frequency = attribute("Frequency").value;
+			double frequency = attribute("Frequency").value;
 			if ((bool)attribute("Frequency").generator)
 			{
-				frequency = attribute("Frequency").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				frequency = attribute("Frequency").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			if ((bool)attribute("Input").generator)
 			{
-				result = attribute("Input").generator.amplitude(frequency, time, duration, depth + 1, sampleRate);
+				result = attribute("Input").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			return result;
 		}

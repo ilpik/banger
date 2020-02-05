@@ -14,12 +14,6 @@ namespace Assets.Scripts.SoundGeneration.Keyboard
     [RequireComponent(typeof(SoundGenerator))]
     class KeyboardSoundController : MonoBehaviour
     {
-        private int sampleRate;
-
-        private Output output;
-
-        public float masterVolume;
-
         public int octave = 4;
 
         const int minOctave = 1;
@@ -27,44 +21,56 @@ namespace Assets.Scripts.SoundGeneration.Keyboard
 
         public bool debug = true;
 
+        private SoundGenerator soundGenerator;
+
         void Awake()
         {
-            sampleRate = AudioSettings.outputSampleRate;
-            
-            foreach (var code in noteKeys)
+            foreach (var code in notes.Keys)
                 freqs[code] = false;
         }
 
         void Start()
         {
-            output = GetComponent<SoundGenerator>().output;
+            soundGenerator = GetComponent<SoundGenerator>();
+
+            var audioSource = gameObject.GetComponent<AudioSource>();
+            audioSource.rolloffMode = AudioRolloffMode.Linear;
         }
 
         void OnAudioFilterRead(float[] data, int channels)
         {
             var freqs = ReadFrequencies();
 
+            double time = AudioSettings.dspTime;
             foreach (var freq in freqs)
             {
-                PlayFrequency(freq, data, channels);
+                PlayFrequency(time, freq, data, channels);
             }
-
         }
 
         public void Update()
         {
-            foreach (var code in noteKeys)
+            foreach (var code in notes.Keys)
             {
                 freqs[code] = Input.GetKey(code);
                 if (debug && Input.GetKeyDown(code))
-                    Debug.Log($"Now playing {Music.NoteName[Array.IndexOf(noteKeys, code)]} (octave {octave})");
+                {
+                    var note = notes[code];
+                    Debug.Log($"Now playing {Music.NoteName[note.note]} (octave {octave + note.octave}) [{GetFrequency(code)}]");
+                }
             }
-            
+
             if (Input.GetKeyDown(KeyCode.X))
+            {
                 octave = Math.Min(octave + 1, maxOctave);
+                Debug.Log("Octave set to " + octave);
+            }
 
             if (Input.GetKeyDown(KeyCode.Z))
+            {
                 octave = Math.Max(octave - 1, minOctave);
+                Debug.Log("Octave set to " + octave);
+            }
         }
 
         //readonly KeyCode[] noteKeys =
@@ -75,66 +81,72 @@ namespace Assets.Scripts.SoundGeneration.Keyboard
         //    KeyCode.K, KeyCode.O, KeyCode.L
         //};
 
-        readonly KeyCode[] noteKeys =
+        //readonly KeyCode[] noteKeys =
+        //{
+        //    KeyCode.H, //A
+        //    KeyCode.U, //A# 
+        //    KeyCode.J, //B
+        //    KeyCode.A, //C
+        //    KeyCode.W, //C#
+        //    KeyCode.S, //D
+        //    KeyCode.E, //D#
+        //    KeyCode.D, //E
+        //    KeyCode.F, //F
+        //    KeyCode.T, //F#
+        //    KeyCode.G, //G
+        //    KeyCode.Y  //G#
+        //};
+
+        public static Dictionary<KeyCode, (int note, int octave)> notes = new Dictionary<KeyCode, (int note, int octave)>()
         {
-            KeyCode.H, //A
-            KeyCode.U, //A# 
-            KeyCode.J, //B
-            KeyCode.A, //C
-            KeyCode.W, //C#
-            KeyCode.S, //D
-            KeyCode.E, //D#
-            KeyCode.D, //E
-            KeyCode.F, //F
-            KeyCode.T, //F#
-            KeyCode.G, //G
-            KeyCode.Y  //G#
+            [KeyCode.A] = (3, 0), //C
+            [KeyCode.W] = (4, 0), //C#
+            [KeyCode.S] = (5, 0), //D
+            [KeyCode.E] = (6, 0), //D#
+            [KeyCode.D] = (7, 0), //E
+            [KeyCode.F] = (8, 0), //F
+            [KeyCode.T] = (9, 0), //F#
+            [KeyCode.G] = (10, 0), //G
+            [KeyCode.Y] = (11, 0), //G#
+            [KeyCode.H] = (0, 1), //A
+            [KeyCode.U] = (1, 1), //A# 
+            [KeyCode.J] = (2, 1), //B
+            [KeyCode.K] = (3, 1), //C
+            [KeyCode.O] = (4, 1), //C#
+            [KeyCode.L] = (5, 1), //D
+            [KeyCode.P] = (6, 1), //D#
+            [KeyCode.Semicolon] = (7, 1), //E
+            [KeyCode.Quote] = (8, 1), //F
         };
 
 
-        private IDictionary<KeyCode, bool> freqs = new Dictionary<KeyCode, bool>();
+        private readonly IDictionary<KeyCode, bool> freqs = new Dictionary<KeyCode, bool>();
 
-        private void PlayFrequency(float frequency, float[] data, int channels)
+        private void PlayFrequency(double startTime, float frequency, float[] data, int channels)
         {
-            var currentDspTime = AudioSettings.dspTime;
-            var dataLen = data.Length / channels;   // the actual data length for each channel
-            var chunkTime = (double)dataLen / sampleRate;   // the time that each chunk of data lasts
-            var dspTimeStep = chunkTime / dataLen;  // the time of each dsp step. (the time that each individual audio sample (actually a float value) lasts)
+            var noteIn = soundGenerator.input;
+            if (noteIn == null)
+                return;
 
-            for (int i = 0; i < dataLen; i++)
-            {
-                var preciseDspTime = currentDspTime + i * dspTimeStep;
-
-                var signalValue = output.OnAmplitude(frequency, (float)preciseDspTime, (float)chunkTime, 0, sampleRate);
-                float x = masterVolume * 0.5f * signalValue;
-
-                for (int j = 0; j < channels; j++)
-                {
-                    data[i * channels + j] += x;
-                }
-
-            }
-
+            noteIn.frequency.value = frequency;
+            noteIn.button.pressed = true;
+            soundGenerator.output.ReadData(startTime, data, channels);
         }
 
         private IEnumerable<float> ReadFrequencies()
         {
-            for (int i = 0; i < noteKeys.Length; i++)
+            foreach (var note in notes)
             {
-                if (freqs[noteKeys[i]])
-                    yield return GetFrequency(noteKeys[i], i);
+                if (freqs[note.Key])
+                    yield return GetFrequency(note.Key);
             }
         }
 
-        private float GetFrequency(KeyCode key, int index)
+        private float GetFrequency(KeyCode key)
         {
-            index = index % 12 + 1;
-            int oct = octave;
-            //if (key == KeyCode.J || key== KeyCode.I || key == KeyCode.K || key == KeyCode.O || key == KeyCode.L || key == )
-            return Music.Frequency(oct, index);
+            var note = notes[key];
+            return Music.Frequency(octave + note.octave, note.note);
         }
-
-        
 
     }
 }

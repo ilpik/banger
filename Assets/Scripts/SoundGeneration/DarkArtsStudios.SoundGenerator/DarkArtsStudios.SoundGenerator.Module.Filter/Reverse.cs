@@ -15,16 +15,12 @@ namespace DarkArtsStudios.SoundGenerator.Module.Filter
 			attributes.Add(new Attribute("Input", _hiddenValue: true));
 		}
 
-		public override float OnAmplitude(float frequency, float time, float duration, int depth, int sampleRate)
+		public override double OnAmplitude(double time, int depth, int sampleRate)
 		{
-			float num = 0f;
-			if (depth > BaseModule.TOODEEP)
-			{
-				return num;
-			}
+			double num = 0f;
 			if ((bool)attribute("Input").generator)
 			{
-				num += attribute("Input").generator.amplitude(frequency, duration - time, duration, depth + 1, sampleRate);
+				num += attribute("Input").generator.amplitude(time, depth + 1, sampleRate);
 			}
 			return num;
 		}
