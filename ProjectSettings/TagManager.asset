@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - DirectionPointer
+  - PickUp
+  - RespawnPoint
+  - PickUpsRespawnPoints
   layers:
   - Default
   - TransparentFX

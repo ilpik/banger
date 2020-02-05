@@ -13,7 +13,6 @@ public class TreeSpawner : MonoBehaviour
     void Start()
     {
         points = this.GetComponentsInChildren<Transform>().Where(x => x.gameObject != gameObject).ToArray();
-
         var rightPoint = GetRightPoint();
         var leftPoint = GetLeftPoint();
         float rotation = Random.value * 360;

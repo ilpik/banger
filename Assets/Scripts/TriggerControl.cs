@@ -6,12 +6,19 @@ public class TriggerControl : MonoBehaviour
 {
     public PlayerController Player;
 
+    private void Update()
+    {
+    }
     void OnTriggerEnter(Collider other)
     {
+           
         Player.isOnGround = true;
+
     }
-    void OnTriggerExit(Collider other)
-    {
-        Player.isOnGround = false;
-    }
+    //void OnTriggerExit(Collider other)
+    //{
+
+    //    Player.isOnGround = false;
+
+    //}
 }
